@@ -1,0 +1,24 @@
+{
+  "captured_utc": "2026-10-16T17:15:27.570935+00:00",
+  "argocd": {
+    "sync": "Synced",
+    "health": "Healthy",
+    "operation": "Succeeded"
+  },
+  "pets_rollout": {
+    "phase": "Healthy",
+    "stable_hash": "5bb9988c9b",
+    "current_hash": "5bb9988c9b",
+    "available_replicas": 2,
+    "aborted": false
+  },
+  "latency_alert": {
+    "state": "inactive",
+    "last_evaluation": "2026-10-16T17:15:11.477412088Z"
+  },
+  "sns": {
+    "notifications_total": 3.0,
+    "notifications_failed_total": 0.0,
+    "baseline_stage4_notifications_total": 2
+  }
+}

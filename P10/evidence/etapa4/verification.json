@@ -1,0 +1,86 @@
+{
+  "captured_utc": "2026-10-16T16:32:44.2675727Z",
+  "target": 0.9999,
+  "window": "7d",
+  "latency_threshold_seconds": 1,
+  "workflow_run": "https://github.com/yaniadavid/Practicas-SA-B-202010175/actions/runs/38931175819",
+  "gitops_pr": "https://github.com/yaniadavid/Practicas-SA-B-202010175-P8/pull/7",
+  "image_tag": "v1.0.2",
+  "prometheus": {
+    "availability_sli7d": 1.0,
+    "availability_budget_used7d": 0.0,
+    "latency_sli7d": 1.0,
+    "latency_budget_used7d": 0.0,
+    "latency_bucket_1s_series": 1,
+    "alerts": [
+      {
+        "name": "P10AvailabilityBudgetBurn",
+        "state": "inactive",
+        "health": "ok"
+      },
+      {
+        "name": "P10LatencyBudgetBurn",
+        "state": "inactive",
+        "health": "ok"
+      }
+    ]
+  },
+  "alertmanager": {
+    "sns_receiver_loaded": true,
+    "sns_notifications_total": 2,
+    "sns_failed_total": 0,
+    "subscription_confirmed": true
+  },
+  "applications": [
+    {
+      "name": "p10-dashboard",
+      "health": "Healthy",
+      "sync": "Synced"
+    },
+    {
+      "name": "p10-monitoring",
+      "health": "Healthy",
+      "sync": "Synced"
+    },
+    {
+      "name": "p10-slo-rules",
+      "health": "Healthy",
+      "sync": "Synced"
+    },
+    {
+      "name": "p9-root",
+      "health": "Healthy",
+      "sync": "Synced"
+    },
+    {
+      "name": "sa-platform-p8",
+      "health": "Healthy",
+      "sync": "Synced"
+    }
+  ],
+  "rollouts": [
+    {
+      "name": "api-gateway",
+      "phase": "Healthy",
+      "updated": 2,
+      "available": 2
+    },
+    {
+      "name": "appointments-service",
+      "phase": "Healthy",
+      "updated": 2,
+      "available": 2
+    },
+    {
+      "name": "pets-service",
+      "phase": "Healthy",
+      "updated": 2,
+      "available": 2
+    }
+  ],
+  "grafana": {
+    "dashboard_uid": "p10-appointments-slo",
+    "panels": 12,
+    "screenshot": "P10/evidence/etapa4/dashboard.png"
+  }
+}

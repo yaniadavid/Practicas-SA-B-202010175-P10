@@ -1,0 +1,354 @@
+{
+    "apiVersion": "argoproj.io/v1alpha1",
+    "kind": "Rollout",
+    "metadata": {
+        "annotations": {
+            "argocd.argoproj.io/tracking-id": "sa-platform-p8:argoproj.io/Rollout:sa-p8/pets-service",
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"argoproj.io/v1alpha1\",\"kind\":\"Rollout\",\"metadata\":{\"annotations\":{\"argocd.argoproj.io/tracking-id\":\"sa-platform-p8:argoproj.io/Rollout:sa-p8/pets-service\"},\"labels\":{\"app.kubernetes.io/component\":\"pets-service\",\"app.kubernetes.io/instance\":\"sa-platform-p8\",\"app.kubernetes.io/managed-by\":\"Helm\",\"app.kubernetes.io/name\":\"sa-platform\",\"app.kubernetes.io/version\":\"1.0.0\",\"helm.sh/chart\":\"sa-platform-0.1.0\"},\"name\":\"pets-service\",\"namespace\":\"sa-p8\"},\"spec\":{\"replicas\":2,\"revisionHistoryLimit\":3,\"selector\":{\"matchLabels\":{\"app.kubernetes.io/component\":\"pets-service\"}},\"strategy\":{\"canary\":{\"steps\":[{\"setWeight\":20},{\"pause\":{\"duration\":\"240s\"}},{\"analysis\":{\"args\":[{\"name\":\"service-name\",\"value\":\"pets-service\"},{\"name\":\"route\",\"value\":\"/pets/:id\"},{\"name\":\"method\",\"value\":\"GET\"},{\"name\":\"canary-hash\",\"valueFrom\":{\"podTemplateHashValue\":\"Latest\"}}],\"templates\":[{\"templateName\":\"p10-prometheus-canary\"}]}},{\"setWeight\":50},{\"pause\":{\"duration\":\"30s\"}},{\"analysis\":{\"args\":[{\"name\":\"service-name\",\"value\":\"pets-service\"},{\"name\":\"route\",\"value\":\"/pets/:id\"},{\"name\":\"method\",\"value\":\"GET\"},{\"name\":\"canary-hash\",\"valueFrom\":{\"podTemplateHashValue\":\"Latest\"}}],\"templates\":[{\"templateName\":\"p10-prometheus-canary\"}]}},{\"setWeight\":100},{\"analysis\":{\"args\":[{\"name\":\"service-name\",\"value\":\"pets-service\"},{\"name\":\"route\",\"value\":\"/pets/:id\"},{\"name\":\"method\",\"value\":\"GET\"},{\"name\":\"canary-hash\",\"valueFrom\":{\"podTemplateHashValue\":\"Latest\"}}],\"templates\":[{\"templateName\":\"p10-prometheus-canary\"}]}}]}},\"template\":{\"metadata\":{\"annotations\":{\"checksum/config\":\"0f714e999367816bb3cbd781f4a6084987e8ad0af9d4563f417ba246e4ded37d\",\"p10.sa/drill-id\":\"latency-2\"},\"labels\":{\"app.kubernetes.io/component\":\"pets-service\"}},\"spec\":{\"affinity\":{\"podAntiAffinity\":{\"preferredDuringSchedulingIgnoredDuringExecution\":[{\"podAffinityTerm\":{\"labelSelector\":{\"matchLabels\":{\"app.kubernetes.io/component\":\"pets-service\"}},\"topologyKey\":\"kubernetes.io/hostname\"},\"weight\":100}]}},\"containers\":[{\"env\":[{\"name\":\"PORT\",\"value\":\"4200\"},{\"name\":\"OTEL_SERVICE_NAME\",\"value\":\"pets-service\"},{\"name\":\"OTEL_EXPORTER_OTLP_ENDPOINT\",\"value\":\"http://otel-collector.observability.svc.cluster.local:4318\"},{\"name\":\"ROLLOUT_HASH\",\"valueFrom\":{\"fieldRef\":{\"fieldPath\":\"metadata.labels['rollouts-pod-template-hash']\"}}},{\"name\":\"P10_FAULT_MODE\",\"value\":\"slow\"}],\"envFrom\":[{\"configMapRef\":{\"name\":\"sa-platform-config\"}},{\"secretRef\":{\"name\":\"sa-platform-secret\"}}],\"image\":\"ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-pets-service:v1.0.3\",\"imagePullPolicy\":\"IfNotPresent\",\"livenessProbe\":{\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":20,\"periodSeconds\":15},\"name\":\"pets-service\",\"ports\":[{\"containerPort\":4200,\"name\":\"http\"}],\"readinessProbe\":{\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":5,\"periodSeconds\":10},\"resources\":{\"limits\":{\"cpu\":\"250m\",\"memory\":\"128Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":true},\"startupProbe\":{\"failureThreshold\":12,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"periodSeconds\":5}}],\"imagePullSecrets\":[{\"name\":\"ghcr-pull-secret\"}],\"securityContext\":{\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"serviceAccountName\":\"pets-service\",\"topologySpreadConstraints\":[{\"labelSelector\":{\"matchLabels\":{\"app.kubernetes.io/component\":\"pets-service\"}},\"maxSkew\":1,\"topologyKey\":\"kubernetes.io/hostname\",\"whenUnsatisfiable\":\"DoNotSchedule\"}]}}}}\n",
+            "rollout.argoproj.io/revision": "4"
+        },
+        "creationTimestamp": "2026-10-16T16:01:36Z",
+        "generation": 5,
+        "labels": {
+            "app.kubernetes.io/component": "pets-service",
+            "app.kubernetes.io/instance": "sa-platform-p8",
+            "app.kubernetes.io/managed-by": "Helm",
+            "app.kubernetes.io/name": "sa-platform",
+            "app.kubernetes.io/version": "1.0.0",
+            "helm.sh/chart": "sa-platform-0.1.0"
+        },
+        "name": "pets-service",
+        "namespace": "sa-p8",
+        "resourceVersion": "37040",
+        "uid": "2bb335de-37c0-472c-bfb5-6e4a27f63ef6"
+    },
+    "spec": {
+        "replicas": 2,
+        "revisionHistoryLimit": 3,
+        "selector": {
+            "matchLabels": {
+                "app.kubernetes.io/component": "pets-service"
+            }
+        },
+        "strategy": {
+            "canary": {
+                "steps": [
+                    {
+                        "setWeight": 20
+                    },
+                    {
+                        "pause": {
+                            "duration": "240s"
+                        }
+                    },
+                    {
+                        "analysis": {
+                            "args": [
+                                {
+                                    "name": "service-name",
+                                    "value": "pets-service"
+                                },
+                                {
+                                    "name": "route",
+                                    "value": "/pets/:id"
+                                },
+                                {
+                                    "name": "method",
+                                    "value": "GET"
+                                },
+                                {
+                                    "name": "canary-hash",
+                                    "valueFrom": {
+                                        "podTemplateHashValue": "Latest"
+                                    }
+                                }
+                            ],
+                            "templates": [
+                                {
+                                    "templateName": "p10-prometheus-canary"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "setWeight": 50
+                    },
+                    {
+                        "pause": {
+                            "duration": "30s"
+                        }
+                    },
+                    {
+                        "analysis": {
+                            "args": [
+                                {
+                                    "name": "service-name",
+                                    "value": "pets-service"
+                                },
+                                {
+                                    "name": "route",
+                                    "value": "/pets/:id"
+                                },
+                                {
+                                    "name": "method",
+                                    "value": "GET"
+                                },
+                                {
+                                    "name": "canary-hash",
+                                    "valueFrom": {
+                                        "podTemplateHashValue": "Latest"
+                                    }
+                                }
+                            ],
+                            "templates": [
+                                {
+                                    "templateName": "p10-prometheus-canary"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "setWeight": 100
+                    },
+                    {
+                        "analysis": {
+                            "args": [
+                                {
+                                    "name": "service-name",
+                                    "value": "pets-service"
+                                },
+                                {
+                                    "name": "route",
+                                    "value": "/pets/:id"
+                                },
+                                {
+                                    "name": "method",
+                                    "value": "GET"
+                                },
+                                {
+                                    "name": "canary-hash",
+                                    "valueFrom": {
+                                        "podTemplateHashValue": "Latest"
+                                    }
+                                }
+                            ],
+                            "templates": [
+                                {
+                                    "templateName": "p10-prometheus-canary"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "template": {
+            "metadata": {
+                "annotations": {
+                    "checksum/config": "0f714e999367816bb3cbd781f4a6084987e8ad0af9d4563f417ba246e4ded37d",
+                    "p10.sa/drill-id": "latency-2"
+                },
+                "labels": {
+                    "app.kubernetes.io/component": "pets-service"
+                }
+            },
+            "spec": {
+                "affinity": {
+                    "podAntiAffinity": {
+                        "preferredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "podAffinityTerm": {
+                                    "labelSelector": {
+                                        "matchLabels": {
+                                            "app.kubernetes.io/component": "pets-service"
+                                        }
+                                    },
+                                    "topologyKey": "kubernetes.io/hostname"
+                                },
+                                "weight": 100
+                            }
+                        ]
+                    }
+                },
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "PORT",
+                                "value": "4200"
+                            },
+                            {
+                                "name": "OTEL_SERVICE_NAME",
+                                "value": "pets-service"
+                            },
+                            {
+                                "name": "OTEL_EXPORTER_OTLP_ENDPOINT",
+                                "value": "http://otel-collector.observability.svc.cluster.local:4318"
+                            },
+                            {
+                                "name": "ROLLOUT_HASH",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "fieldPath": "metadata.labels['rollouts-pod-template-hash']"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "P10_FAULT_MODE",
+                                "value": "slow"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "configMapRef": {
+                                    "name": "sa-platform-config"
+                                }
+                            },
+                            {
+                                "secretRef": {
+                                    "name": "sa-platform-secret"
+                                }
+                            }
+                        ],
+                        "image": "ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-pets-service:v1.0.3",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "httpGet": {
+                                "path": "/health",
+                                "port": "http"
+                            },
+                            "initialDelaySeconds": 20,
+                            "periodSeconds": 15
+                        },
+                        "name": "pets-service",
+                        "ports": [
+                            {
+                                "containerPort": 4200,
+                                "name": "http",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "httpGet": {
+                                "path": "/health",
+                                "port": "http"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "250m",
+                                "memory": "128Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "64Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "readOnlyRootFilesystem": true
+                        },
+                        "startupProbe": {
+                            "failureThreshold": 12,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": "http"
+                            },
+                            "periodSeconds": 5
+                        }
+                    }
+                ],
+                "imagePullSecrets": [
+                    {
+                        "name": "ghcr-pull-secret"
+                    }
+                ],
+                "securityContext": {
+                    "runAsGroup": 10001,
+                    "runAsNonRoot": true,
+                    "runAsUser": 10001
+                },
+                "serviceAccountName": "pets-service",
+                "topologySpreadConstraints": [
+                    {
+                        "labelSelector": {
+                            "matchLabels": {
+                                "app.kubernetes.io/component": "pets-service"
+                            }
+                        },
+                        "maxSkew": 1,
+                        "topologyKey": "kubernetes.io/hostname",
+                        "whenUnsatisfiable": "DoNotSchedule"
+                    }
+                ]
+            }
+        }
+    },
+    "status": {
+        "HPAReplicas": 2,
+        "abort": true,
+        "abortedAt": "2026-10-16T17:12:50Z",
+        "availableReplicas": 2,
+        "blueGreen": {},
+        "canary": {},
+        "conditions": [
+            {
+                "lastTransitionTime": "2026-10-16T16:01:55Z",
+                "lastUpdateTime": "2026-10-16T16:01:55Z",
+                "message": "Rollout has minimum availability",
+                "reason": "AvailableReason",
+                "status": "True",
+                "type": "Available"
+            },
+            {
+                "lastTransitionTime": "2026-10-16T17:02:56Z",
+                "lastUpdateTime": "2026-10-16T17:02:56Z",
+                "message": "Rollout is not healthy",
+                "reason": "RolloutHealthy",
+                "status": "False",
+                "type": "Healthy"
+            },
+            {
+                "lastTransitionTime": "2026-10-16T17:02:56Z",
+                "lastUpdateTime": "2026-10-16T17:02:56Z",
+                "message": "RolloutCompleted",
+                "reason": "RolloutCompleted",
+                "status": "False",
+                "type": "Completed"
+            },
+            {
+                "lastTransitionTime": "2026-10-16T17:12:50Z",
+                "lastUpdateTime": "2026-10-16T17:12:50Z",
+                "message": "Rollout is paused",
+                "reason": "RolloutPaused",
+                "status": "False",
+                "type": "Paused"
+            },
+            {
+                "lastTransitionTime": "2026-10-16T17:12:50Z",
+                "lastUpdateTime": "2026-10-16T17:12:50Z",
+                "message": "Rollout aborted update to revision 4: Step-based analysis phase error/failed: Metric \"canary-p95-latency-seconds\" assessed Failed due to failed (1) \u003e failureLimit (0)",
+                "reason": "RolloutAborted",
+                "status": "False",
+                "type": "Progressing"
+            }
+        ],
+        "currentPodHash": "679cb87476",
+        "currentStepHash": "64b844596d",
+        "currentStepIndex": 0,
+        "message": "RolloutAborted: Rollout aborted update to revision 4: Step-based analysis phase error/failed: Metric \"canary-p95-latency-seconds\" assessed Failed due to failed (1) \u003e failureLimit (0)",
+        "observedGeneration": "5",
+        "phase": "Degraded",
+        "readyReplicas": 2,
+        "replicas": 2,
+        "selector": "app.kubernetes.io/component=pets-service",
+        "stableRS": "5bb9988c9b"
+    }
+}

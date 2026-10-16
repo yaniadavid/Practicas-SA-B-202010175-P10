@@ -1,0 +1,50 @@
+{{- if and .Values.rollouts.enabled (default false .Values.observability.enabled) }}
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: p10-prometheus-canary
+  namespace: {{ .Values.namespace.name | quote }}
+  labels:
+    {{- include "sa-platform.labels" . | nindent 4 }}
+spec:
+  args:
+    - name: service-name
+    - name: route
+    - name: method
+    - name: canary-hash
+  metrics:
+    - name: canary-http-5xx-rate
+      interval: 15s
+      count: 3
+      failureLimit: 0
+      successCondition: result[0] >= 0 && result[0] <= 0.01
+      failureCondition: result[0] < 0 || result[0] > 0.01
+      provider:
+        prometheus:
+          address: http://monitoring-prometheus.observability.svc.cluster.local:9090
+          query: |
+            (
+              (
+                (sum(increase(sa_http_requests_total{job="{{`{{args.service-name}}`}}",route="{{`{{args.route}}`}}",method="{{`{{args.method}}`}}",rollout_hash="{{`{{args.canary-hash}}`}}",status_class="5xx"}[2m])) or vector(0))
+                /
+                clamp_min(sum(increase(sa_http_requests_total{job="{{`{{args.service-name}}`}}",route="{{`{{args.route}}`}}",method="{{`{{args.method}}`}}",rollout_hash="{{`{{args.canary-hash}}`}}",status_class=~"2xx|3xx|5xx"}[2m])), 1)
+              )
+              and on() (sum(increase(sa_http_requests_total{job="{{`{{args.service-name}}`}}",route="{{`{{args.route}}`}}",method="{{`{{args.method}}`}}",rollout_hash="{{`{{args.canary-hash}}`}}",status_class=~"2xx|3xx|5xx"}[2m])) >= 10)
+            ) or on() vector(-1)
+    - name: canary-p95-latency-seconds
+      interval: 15s
+      count: 3
+      failureLimit: 0
+      successCondition: result[0] >= 0 && result[0] <= 1
+      failureCondition: result[0] < 0 || result[0] > 1
+      provider:
+        prometheus:
+          address: http://monitoring-prometheus.observability.svc.cluster.local:9090
+          query: |
+            (
+              histogram_quantile(0.95,
+                sum by (le) (rate(sa_http_request_duration_slo_seconds_bucket{job="{{`{{args.service-name}}`}}",route="{{`{{args.route}}`}}",method="{{`{{args.method}}`}}",rollout_hash="{{`{{args.canary-hash}}`}}",status_class=~"2xx|3xx"}[2m]))
+              )
+              and on() (sum(increase(sa_http_request_duration_slo_seconds_bucket{job="{{`{{args.service-name}}`}}",route="{{`{{args.route}}`}}",method="{{`{{args.method}}`}}",rollout_hash="{{`{{args.canary-hash}}`}}",status_class=~"2xx|3xx",le="+Inf"}[2m])) >= 10)
+            ) or on() vector(-1)
+{{- end }}

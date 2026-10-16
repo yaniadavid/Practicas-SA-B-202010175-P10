@@ -1,0 +1,186 @@
+{{- $obs := default dict .Values.observability }}
+{{- range $key, $svc := .Values.services }}
+{{- if and $svc.enabled $.Values.rollouts.enabled }}
+{{- $p10 := and (default false $obs.enabled) (has $svc.name (list "api-gateway" "appointments-service" "pets-service")) }}
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ $svc.name | quote }}
+  namespace: {{ $.Values.namespace.name | quote }}
+  labels:
+    {{- include "sa-platform.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $svc.name | quote }}
+spec:
+  replicas: {{ default 2 $svc.replicas }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: {{ $svc.name | quote }}
+  strategy:
+    canary:
+      {{- if $p10 }}
+      steps:
+        - setWeight: 20
+        - pause:
+            duration: 240s
+        - analysis:
+            templates:
+              - templateName: p10-prometheus-canary
+            args:
+              - name: service-name
+                value: {{ $svc.name | quote }}
+              - name: route
+                value: {{ if eq $svc.name "api-gateway" }}"/api/appointments"{{ else if eq $svc.name "appointments-service" }}"/appointments"{{ else }}"/pets/:id"{{ end }}
+              - name: method
+                value: {{ if eq $svc.name "pets-service" }}"GET"{{ else }}"POST"{{ end }}
+              - name: canary-hash
+                valueFrom:
+                  podTemplateHashValue: Latest
+        - setWeight: 50
+        - pause:
+            duration: 30s
+        - analysis:
+            templates:
+              - templateName: p10-prometheus-canary
+            args:
+              - name: service-name
+                value: {{ $svc.name | quote }}
+              - name: route
+                value: {{ if eq $svc.name "api-gateway" }}"/api/appointments"{{ else if eq $svc.name "appointments-service" }}"/appointments"{{ else }}"/pets/:id"{{ end }}
+              - name: method
+                value: {{ if eq $svc.name "pets-service" }}"GET"{{ else }}"POST"{{ end }}
+              - name: canary-hash
+                valueFrom:
+                  podTemplateHashValue: Latest
+        - setWeight: 100
+        - analysis:
+            templates:
+              - templateName: p10-prometheus-canary
+            args:
+              - name: service-name
+                value: {{ $svc.name | quote }}
+              - name: route
+                value: {{ if eq $svc.name "api-gateway" }}"/api/appointments"{{ else if eq $svc.name "appointments-service" }}"/appointments"{{ else }}"/pets/:id"{{ end }}
+              - name: method
+                value: {{ if eq $svc.name "pets-service" }}"GET"{{ else }}"POST"{{ end }}
+              - name: canary-hash
+                valueFrom:
+                  podTemplateHashValue: Latest
+      {{- else }}
+      {{- with $.Values.rollouts.steps }}
+      steps:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: {{ $svc.name | quote }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum | quote }}
+        {{- if and (eq $svc.name "pets-service") (default "" $svc.drillId) }}
+        p10.sa/drill-id: {{ $svc.drillId | quote }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ $svc.name | quote }}
+      {{- if $svc.antiAffinity }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: {{ $svc.name | quote }}
+                topologyKey: kubernetes.io/hostname
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/component: {{ $svc.name | quote }}
+      {{- end }}
+      {{- with $.Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: {{ $.Values.security.runAsNonRoot }}
+        runAsUser: {{ $.Values.security.runAsUser }}
+        runAsGroup: {{ $.Values.security.runAsGroup }}
+      containers:
+        - name: {{ $svc.name | quote }}
+          image: {{ include "sa-platform.image" $svc }}
+          imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ $svc.port }}
+          env:
+            - name: PORT
+              value: {{ $svc.port | quote }}
+            {{- if and (default false $obs.enabled) (has $svc.name (list "api-gateway" "appointments-service" "pets-service")) }}
+            - name: OTEL_SERVICE_NAME
+              value: {{ $svc.name | quote }}
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: {{ $obs.otlpEndpoint | quote }}
+            - name: ROLLOUT_HASH
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['rollouts-pod-template-hash']
+            {{- end }}
+            {{- if and (eq $svc.name "pets-service") (default "" $svc.faultMode) }}
+            - name: P10_FAULT_MODE
+              value: {{ $svc.faultMode | quote }}
+            {{- end }}
+            {{- if eq $svc.name "appointments-service" }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default "sa-platform-secret" $.Values.secrets.name | quote }}
+                  key: postgres-password
+            - name: APPOINTMENTS_WRITE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default "sa-platform-secret" $.Values.secrets.name | quote }}
+                  key: appointments-write-token
+                  optional: true
+            {{- if default false $obs.enabled }}
+            - name: PETS_SERVICE_URL
+              value: http://pets-service:4200
+            {{- end }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: sa-platform-config
+            - secretRef:
+                name: {{ default "sa-platform-secret" $.Values.secrets.name | quote }}
+          livenessProbe:
+            httpGet:
+              path: {{ default "/health" $svc.livenessPath }}
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: {{ default "/health" $svc.readinessPath }}
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: {{ default "/health" $svc.readinessPath }}
+              port: http
+            failureThreshold: 12
+            periodSeconds: 5
+          resources:
+            {{- toYaml $svc.resources | nindent 12 }}
+          securityContext:
+            readOnlyRootFilesystem: {{ $.Values.security.readOnlyRootFilesystem }}
+            allowPrivilegeEscalation: {{ $.Values.security.allowPrivilegeEscalation }}
+            capabilities:
+              drop:
+                - ALL
+---
+{{- end }}
+{{- end }}

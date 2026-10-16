@@ -1,0 +1,138 @@
+name: P10 Observability Supply Chain
+
+on:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "P10/**"
+      - ".github/workflows/p10-observability.yml"
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Semantic image tag, for example v1.0.0"
+        required: true
+        default: "v1.0.0"
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+env:
+  REGISTRY: ghcr.io
+  GITOPS_REPOSITORY: yaniadavid/Practicas-SA-B-202010175-P8
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.7"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test services and local trace
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p P10/.runtime
+          (cd P10/services/pets-service && go test ./... && go vet ./... && go build -o ../../.runtime/pets-service .)
+          (cd P10/services/api-gateway && npm ci --omit=dev && node --check src/index.js)
+          (cd P10/services/appointments-service && npm ci --omit=dev && node --check src/index.js)
+          node P10/tests/integration-local.mjs
+      - uses: azure/setup-helm@v4
+      - name: Validate observability values
+        shell: bash
+        run: |
+          set -euo pipefail
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo add grafana https://grafana.github.io/helm-charts
+          helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+          helm repo update
+          helm template monitoring prometheus-community/kube-prometheus-stack --version 92.9.0 --namespace observability -f P10/gitops/apps/observability/monitoring-values.yaml > /dev/null
+          helm template loki grafana/loki --version 7.3.0 --namespace observability -f P10/gitops/apps/observability/loki-values.yaml > /dev/null
+          helm template tempo grafana/tempo --version 1.24.4 --namespace observability -f P10/gitops/apps/observability/tempo-values.yaml > /dev/null
+          helm template otel-collector open-telemetry/opentelemetry-collector --version 0.176.0 --namespace observability -f P10/gitops/apps/observability/otel-collector-values.yaml > /dev/null
+          helm template otel-logs open-telemetry/opentelemetry-collector --version 0.176.0 --namespace observability -f P10/gitops/apps/observability/otel-logs-values.yaml > /dev/null
+
+  build_scan_sign:
+    needs: validate
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [api-gateway, appointments-service, pets-service]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate image tag
+        shell: bash
+        run: |
+          [[ '${{ inputs.image_tag }}' =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: P10/services/${{ matrix.service }}
+          push: true
+          tags: ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-${{ matrix.service }}:${{ inputs.image_tag }}
+      - uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-${{ matrix.service }}:${{ inputs.image_tag }}
+          format: table
+          severity: CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+      - uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-${{ matrix.service }}:${{ inputs.image_tag }}
+          format: cyclonedx
+          output: sbom-p10-${{ matrix.service }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom-p10-${{ matrix.service }}
+          path: sbom-p10-${{ matrix.service }}.json
+      - uses: sigstore/cosign-installer@v3
+      - name: Sign image
+        run: cosign sign --yes 'ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-${{ matrix.service }}:${{ inputs.image_tag }}'
+
+  update_gitops:
+    needs: build_scan_sign
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.GITOPS_REPOSITORY }}
+          token: ${{ secrets.SA_TOKEN }}
+          path: gitops
+      - name: Promote three images in GitOps
+        uses: mikefarah/yq@v4.44.3
+        with:
+          cmd: |
+            yq -i '
+              .services.apiGateway.image.repository = "ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-api-gateway" |
+              .services.apiGateway.image.tag = "${{ inputs.image_tag }}" |
+              .services.appointments.image.repository = "ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-appointments-service" |
+              .services.appointments.image.tag = "${{ inputs.image_tag }}" |
+              .services.pets.image.repository = "ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-pets-service" |
+              .services.pets.image.tag = "${{ inputs.image_tag }}"
+            ' gitops/apps/sa-platform/values-p8.yaml
+      - uses: peter-evans/create-pull-request@v8.1.1
+        with:
+          token: ${{ secrets.SA_TOKEN }}
+          path: gitops
+          branch: promote/p10-${{ inputs.image_tag }}
+          title: "Promote P10 ${{ inputs.image_tag }}"
+          commit-message: "Promote P10 images to ${{ inputs.image_tag }}"
+          body: |
+            Promocion declarativa de las tres imagenes instrumentadas de P10.
+
+            - Version: `${{ inputs.image_tag }}`
+            - Argo CD aplicara el cambio al integrar este PR.

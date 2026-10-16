@@ -1,0 +1,42 @@
+{
+  "monitor_started_utc": "2026-10-16T17:10:15.995771Z",
+  "alert_name": "P10LatencyBudgetBurn",
+  "alert_first_seen_utc": "2026-10-16T17:12:14.594400Z",
+  "alert_starts_at_utc": "2026-10-16T17:12:11.475Z",
+  "receiver": [
+    "p10-slo-email"
+  ],
+  "cause_confirmed_utc": "2026-10-16T17:12:15.142399Z",
+  "sample": {
+    "at_utc": "2026-10-16T17:09:30.293980+00:00",
+    "ended_utc": "2026-10-16T17:09:32.563786+00:00",
+    "sequence": 15,
+    "trace_id": "c6cf9eaa0c618faa99e4ed7197567e8c",
+    "status": 201,
+    "duration_ms": 2269.8,
+    "appointment_id": "b3d59320-2d50-441f-bd6d-7b3fb00bfa42",
+    "error": null
+  },
+  "cause": {
+    "trace_id": "c6cf9eaa0c618faa99e4ed7197567e8c",
+    "services": [
+      "api-gateway",
+      "appointments-service",
+      "pets-service"
+    ],
+    "pets_span_ms": 2000.4,
+    "fault_attribute": "slow",
+    "log_event": {
+      "delay_ms": 2000,
+      "level": "warn",
+      "message": "pet_lookup_injected_delay",
+      "service": "pets-service",
+      "span_id": "afd84613bddf7152",
+      "timestamp": "2026-10-16T17:09:30.177392611Z",
+      "trace_id": "c6cf9eaa0c618faa99e4ed7197567e8c"
+    }
+  },
+  "alert_to_cause_seconds": 0.5,
+  "result": "confirmed",
+  "evidence_note": "Tiempos del segundo observador conservados en su salida de ejecución; el primer observador sobrescribió después este archivo. Traza y log se consultaron nuevamente y se guardaron en trace-log-reverified.json."
+}

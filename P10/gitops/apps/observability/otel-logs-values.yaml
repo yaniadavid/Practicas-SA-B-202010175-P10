@@ -1,0 +1,52 @@
+mode: daemonset
+fullnameOverride: otel-logs
+image:
+  repository: otel/opentelemetry-collector-contrib
+command:
+  name: otelcol-contrib
+presets:
+  logsCollection:
+    enabled: true
+  kubernetesAttributes:
+    enabled: true
+resources:
+  requests:
+    cpu: 40m
+    memory: 96Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+ports:
+  otlp:
+    enabled: false
+  otlp-http:
+    enabled: false
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+config:
+  exporters:
+    debug: null
+    otlphttp/loki:
+      endpoint: http://loki.observability.svc.cluster.local:3100/otlp
+  receivers:
+    jaeger: null
+    zipkin: null
+    prometheus: null
+    otlp: null
+    filelog:
+      include:
+        - /var/log/pods/sa-p8_*/*/*.log
+  service:
+    pipelines:
+      logs:
+        receivers: [filelog]
+        processors: [memory_limiter, batch]
+        exporters: [otlphttp/loki]
+      metrics: null
+      traces: null

@@ -1,0 +1,49 @@
+{
+  "captured_utc": "2026-10-16T16:06:00Z",
+  "aws_account": "536882095007",
+  "region": "us-east-1",
+  "eks_cluster": "sa-p9-202010175",
+  "ready_nodes": 2,
+  "gitops": {
+    "workflow_run": "https://github.com/yaniadavid/Practicas-SA-B-202010175/actions/runs/38926473683",
+    "promotion_pr": "https://github.com/yaniadavid/Practicas-SA-B-202010175-P8/pull/6",
+    "image_tag": "v1.0.1",
+    "healthy_synced_applications": [
+      "p10-monitoring",
+      "p10-loki",
+      "p10-tempo",
+      "p10-otel-collector",
+      "p10-otel-logs",
+      "sa-platform-p8"
+    ]
+  },
+  "request": {
+    "method": "POST",
+    "path": "/api/appointments",
+    "status": 201,
+    "trace_id": "1cf4886c5aa71138a3aa9429b545de65"
+  },
+  "tempo": {
+    "http_status": 200,
+    "trace_services": ["api-gateway", "appointments-service", "pets-service"]
+  },
+  "loki": {
+    "query_status": "success",
+    "log_services_with_same_trace_id": ["api-gateway", "appointments-service", "pets-service"],
+    "matching_streams": 3
+  },
+  "prometheus": {
+    "http_request_counter": "sa_http_requests_total",
+    "appointments_post_series": 1,
+    "appointments_rollout_hash": "866b9994c6",
+    "business_counter": "sa_appointments_created_total",
+    "business_counter_value": 1,
+    "duration_histogram": "sa_http_request_duration_seconds_bucket"
+  },
+  "grafana": {
+    "health": "ok",
+    "datasources": ["Prometheus", "Alertmanager", "Loki", "Tempo"],
+    "loki_trace_link": "${__value.raw}",
+    "loki_trace_datasource_uid": "tempo"
+  }
+}

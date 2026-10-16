@@ -1,0 +1,107 @@
+{{- $obs := default dict .Values.observability }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: {{ .Values.namespace.name | quote }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+---
+{{- range $key, $svc := .Values.services }}
+{{- if and $svc.enabled (ne $svc.name "api-gateway") }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ printf "allow-gateway-to-%s" $svc.name | quote }}
+  namespace: {{ $.Values.namespace.name | quote }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: {{ $svc.name | quote }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: api-gateway
+        {{- if and (eq $svc.name "pets-service") (default false $obs.enabled) }}
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: appointments-service
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ $svc.port }}
+---
+{{- end }}
+{{- end }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-gateway
+  namespace: {{ .Values.namespace.name | quote }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: api-gateway
+  policyTypes:
+    - Ingress
+  ingress:
+    - {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-services-to-postgresql
+  namespace: {{ .Values.namespace.name | quote }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - auth-service
+                  - owners-service
+                  - pets-service
+                  - appointments-service
+                  - medical-records-service
+                  - audit-execution-cronjob
+                  - audit-summary-cronjob
+      ports:
+        - protocol: TCP
+          port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-services-to-rabbitmq
+  namespace: {{ .Values.namespace.name | quote }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: rabbitmq
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - appointments-service
+                  - medical-records-service
+                  - audit-summary-cronjob
+      ports:
+        - protocol: TCP
+          port: 5672

@@ -1,0 +1,136 @@
+namespace:
+  create: false
+  name: sa-p8
+global:
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets:
+    - name: ghcr-pull-secret
+  logLevel: info
+  carne: "202010175"
+  timezone: "America/Guatemala"
+ingress:
+  enabled: true
+  className: nginx
+  host: veterinaria-p8.example.com
+  annotations: {}
+  tls: []
+secrets:
+  create: false
+  name: sa-platform-secret
+  supabaseUrl: ""
+  supabaseServiceRoleKey: ""
+  aesSecretKey: ""
+  emailHashSecret: ""
+  jwtSecret: ""
+  postgresPassword: ""
+  rabbitmqPassword: ""
+config:
+  appointmentsStorage: postgres
+observability:
+  enabled: true
+  otlpEndpoint: http://otel-collector.observability.svc.cluster.local:4318
+services:
+  apiGateway:
+    enabled: true
+    image:
+      repository: ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-api-gateway
+      tag: v1.0.2
+    replicas: 2
+    antiAffinity: true
+  owners:
+    enabled: true
+    image:
+      repository: ghcr.io/yaniadavid/practicas-sa-b-202010175/p8-owners-service
+      tag: v1.0.7
+    replicas: 2
+    antiAffinity: true
+  pets:
+    enabled: true
+    image:
+      repository: ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-pets-service
+      tag: v1.0.2
+    replicas: 2
+    antiAffinity: true
+  appointments:
+    enabled: true
+    image:
+      repository: ghcr.io/yaniadavid/practicas-sa-b-202010175/p10-appointments-service
+      tag: v1.0.2
+    replicas: 2
+    antiAffinity: true
+    livenessPath: /live
+  medicalRecords:
+    enabled: false
+    image:
+      repository: ghcr.io/yaniadavid/practicas-sa-b-202010175/p8-medical-records-service
+      tag: v1.0.7
+    replicas: 1
+  auth:
+    enabled: false
+    image:
+      repository: ghcr.io/yaniadavid/practicas-sa-b-202010175/p8-auth-service
+      tag: v1.0.7
+    replicas: 1
+  authorization:
+    enabled: false
+    image:
+      repository: ghcr.io/yaniadavid/practicas-sa-b-202010175/p8-authorization-service
+      tag: v1.0.7
+    replicas: 1
+postgresql:
+  enabled: true
+  primary:
+    podSecurityContext:
+      runAsNonRoot: true
+    persistence:
+      enabled: true
+      size: 1Gi
+      # Set this to the StorageClass available in the target cluster.
+      storageClass: gp3
+rabbitmq:
+  enabled: false
+cronjobs:
+  enabled: false
+hpa:
+  enabled: false
+rollouts:
+  enabled: true
+  analysis:
+    image: curlimages/curl:8.10.1
+    interval: 30s
+    count: 3
+    failureLimit: 1
+  steps:
+    - setWeight: 20
+    - pause:
+        duration: 30s
+    - analysis:
+        templates:
+          - templateName: p8-http-smoke-analysis
+        args:
+          - name: service-url
+            value: http://api-gateway.sa-p8.svc.cluster.local:3000
+    - setWeight: 50
+    - pause:
+        duration: 60s
+    - analysis:
+        templates:
+          - templateName: p8-http-smoke-analysis
+        args:
+          - name: service-url
+            value: http://api-gateway.sa-p8.svc.cluster.local:3000
+    - setWeight: 100
+    - analysis:
+        templates:
+          - templateName: p8-http-smoke-analysis
+        args:
+          - name: service-url
+            value: http://api-gateway.sa-p8.svc.cluster.local:3000
+policies:
+  enabled: true
+security:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false

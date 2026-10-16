@@ -1,0 +1,71 @@
+{"at_utc": "2026-10-16T17:07:06.262294+00:00", "trace_id": "33278459f6ba4e5cbff96d96ccb2ed75", "duration_ms": 1031, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.264067+00:00", "trace_id": "de4e7a6e882c409c97d041742abaab05", "duration_ms": 1036, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.264625+00:00", "trace_id": "0845cc0fa05442129551167b0e27bde3", "duration_ms": 937, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.265084+00:00", "trace_id": "ad87b5ba76874f4f8c51f3a24915c7a2", "duration_ms": 938, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.265618+00:00", "trace_id": "71e22c56362f4f6c90629144347a9dd9", "duration_ms": 1022, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.266147+00:00", "trace_id": "82af7e25b56547d9a8f4b504370a819e", "duration_ms": 1025, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.266595+00:00", "trace_id": "24db8a3d3bdc47cbb86e9e0e94f57701", "duration_ms": 1013, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.267041+00:00", "trace_id": "af9d160eaf324e4181611ccae2ce91a5", "duration_ms": 936, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.271344+00:00", "trace_id": "6acdfd4294384f28b7be47e3aae91a3a", "duration_ms": 1008, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.272147+00:00", "trace_id": "b8c7678d39b64699a302e751411cbdc1", "duration_ms": 1015, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:06.272766+00:00", "trace_id": "df48cd000549421a9fdce7cbbe39fc07", "duration_ms": 1023, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.273478+00:00", "trace_id": "4e16362bd76443c290f9678791973301", "duration_ms": 1027, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.274046+00:00", "trace_id": "b625f65a20a24133993feec8d55be83f", "duration_ms": 1018, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.274577+00:00", "trace_id": "75417ff7982f44a8ba986f866de89870", "duration_ms": 1012, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:06.275088+00:00", "trace_id": "cc93ed9916434cdfa5fd6bf49cd959b9", "duration_ms": 1013, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.275529+00:00", "trace_id": "267079338a884839b67dfc2d9383fae1", "duration_ms": 927, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.276028+00:00", "trace_id": "7aa3129e82134355919dca69cc0bfa2e", "duration_ms": 928, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.276643+00:00", "trace_id": "797cb31418fb4af28e2adfd9785de18a", "duration_ms": 1002, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:06.277144+00:00", "trace_id": "0c15a56050d24de8857584528856b357", "duration_ms": 1011, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:06.277659+00:00", "trace_id": "5bef76c53c57488da3e8fe6bc24acc1b", "duration_ms": 1011, "status": "Remote end closed connection without response"}
+{"at_utc": "2026-10-16T17:07:07.201843+00:00", "trace_id": "75ec42bee5114d82b675a585bb75281e", "duration_ms": 232, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:07.202246+00:00", "trace_id": "2bb607697bb74f028a9eab4c07604bc5", "duration_ms": 232, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:07.203181+00:00", "trace_id": "5c8e9ce6c2364975afc10c021537fb39", "duration_ms": 230, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:07.203455+00:00", "trace_id": "274b5d6ff6204cbea1c1b8fa83714e0f", "duration_ms": 230, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:07.203667+00:00", "trace_id": "e37c6d486580418f8420039f550683cd", "duration_ms": 230, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:07.278287+00:00", "trace_id": "cd5c3e2decb54f388e8d55261d211b73", "duration_ms": 156, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:07.279173+00:00", "trace_id": "649550ec73964a889396096ac89f4d03", "duration_ms": 155, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:07.279563+00:00", "trace_id": "e558d9b06c4d4465b753fe8b64f10223", "duration_ms": 154, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:07.286777+00:00", "trace_id": "2d011e235da14fa0b7948de0343e02e2", "duration_ms": 147, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:07:07.287331+00:00", "trace_id": "009e0d9f0e264a1ebc7d47ef14044791", "duration_ms": 146, "status": "[WinError 10054] Se ha forzado la interrupci\u00f3n de una conexi\u00f3n existente por el host remoto"}
+{"at_utc": "2026-10-16T17:09:54.665869+00:00", "trace_id": "f67e3696df5a3c2ba19ae6e1249c80a0", "duration_ms": 2271, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:09:56.937183+00:00", "trace_id": "23168731be1c719b440382659a44ac6f", "duration_ms": 2227, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:09:59.164698+00:00", "trace_id": "c11f2b673a7981dd4236b6ad6951cc3e", "duration_ms": 2216, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:01.380530+00:00", "trace_id": "700f6831cbe8f57ba99c5b3a8e1da879", "duration_ms": 2212, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:03.592945+00:00", "trace_id": "649d25a0bc92f3bafab6406457489164", "duration_ms": 2243, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:05.836442+00:00", "trace_id": "e80033bfee41eaa16a8467d8d7ab3dfb", "duration_ms": 2218, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:08.054634+00:00", "trace_id": "edc7795fc21bb02aacde8a0ca4acb90f", "duration_ms": 2215, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:10.269282+00:00", "trace_id": "89dadb06d3115953cf8e9070b124651f", "duration_ms": 2216, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:12.485627+00:00", "trace_id": "9d7fd1345dd5cf1fc465b70e99181522", "duration_ms": 2217, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:14.702426+00:00", "trace_id": "089b26f1d3f7189dc8e4f9d32fe7ed7b", "duration_ms": 2220, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:16.922961+00:00", "trace_id": "1eb87ea5b06e5ab430b6ada38ab14077", "duration_ms": 2219, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:19.142400+00:00", "trace_id": "2aa9544604ddba7a6e2ecf4bf1d8ad3e", "duration_ms": 2216, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:21.358144+00:00", "trace_id": "7c5b1f3ea24c702735768f9f109769cf", "duration_ms": 2217, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:23.575092+00:00", "trace_id": "1a5e03065d0a955cb590b98be49a6d63", "duration_ms": 2221, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:10:25.796458+00:00", "trace_id": "b54a32416e2bca02b537f78e1ba15dfa", "duration_ms": 2226, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:11:53.872893+00:00", "trace_id": "08d918b5c9afd9c5d45d9375b756a71d", "duration_ms": 2265, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:11:56.138757+00:00", "trace_id": "86b175e33e0b28f08f0695a648c3afc1", "duration_ms": 2214, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:11:58.353284+00:00", "trace_id": "d2d9352caa79c3e93ccc65037397335c", "duration_ms": 2220, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:00.573733+00:00", "trace_id": "09a3a404e4d0bd6a8a803a81b8d35cc8", "duration_ms": 2214, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:02.787665+00:00", "trace_id": "d57e85fb354758c55862b02e290ced1f", "duration_ms": 2217, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:05.004689+00:00", "trace_id": "b01d926a6a8bd584865a8d3ba4983df1", "duration_ms": 2227, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:07.232128+00:00", "trace_id": "ecfd08021b97eaf5cfe4aede3569f6d0", "duration_ms": 2216, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:09.448255+00:00", "trace_id": "d27f2f4637b12f15eabc87c807d22a4a", "duration_ms": 2229, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:11.677638+00:00", "trace_id": "b6f667a7a9f909be39c648f1a895c529", "duration_ms": 2219, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:13.896906+00:00", "trace_id": "1aca79798e24911086d6818d996f8360", "duration_ms": 2215, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:16.111908+00:00", "trace_id": "998f59102557cca4808bd5af4a267e94", "duration_ms": 2219, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:18.331083+00:00", "trace_id": "412ce5ce897ac6f6b4dc172120d7776c", "duration_ms": 2220, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:20.551148+00:00", "trace_id": "f68bbdd5f7c5c697794294930eccbf09", "duration_ms": 2216, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:22.766774+00:00", "trace_id": "5569b3a7e092c9c769d1e466d88d3245", "duration_ms": 2220, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:24.987239+00:00", "trace_id": "cd4c8d05f511fe80e1f8f24e1683d9e3", "duration_ms": 2219, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:27.206898+00:00", "trace_id": "0a9671c94bb6ae35d7a10b1598c042ce", "duration_ms": 2222, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:29.429190+00:00", "trace_id": "fae4cd693c8ac023d763cd5be68961d1", "duration_ms": 2215, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:31.643990+00:00", "trace_id": "00b359b83ed3327a9adee39d8fcffa24", "duration_ms": 2216, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:33.860168+00:00", "trace_id": "46508205d7a5759a10ecfa17d3b5b3da", "duration_ms": 2220, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:36.080101+00:00", "trace_id": "748af1d868a6752602dfd6a98495764b", "duration_ms": 2215, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:38.295618+00:00", "trace_id": "7172191439d0ed446cd0d11efe553a3d", "duration_ms": 2213, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:40.509205+00:00", "trace_id": "911474353c85fd21d10e9998f42d5e92", "duration_ms": 2221, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:42.730510+00:00", "trace_id": "385080ff981f6a802a78c51b6ced4a0e", "duration_ms": 2218, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:44.948808+00:00", "trace_id": "55d676ffd7b8151e358859692a470d8a", "duration_ms": 2225, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:47.174207+00:00", "trace_id": "ca809dec3123fc4fd21d8c9f1c22ef27", "duration_ms": 2215, "status": 200, "rollout_hash": "679cb87476"}
+{"at_utc": "2026-10-16T17:12:49.389202+00:00", "trace_id": "6ac64b54538ff575864f81c068277015", "duration_ms": 2152, "status": "Remote end closed connection without response", "rollout_hash": "679cb87476"}

@@ -1,0 +1,26 @@
+{
+  "reverified_utc": "2026-10-16T17:22:15.709358+00:00",
+  "trace_id": "c6cf9eaa0c618faa99e4ed7197567e8c",
+  "services": [
+    "api-gateway",
+    "appointments-service",
+    "pets-service"
+  ],
+  "fault_spans": [
+    {
+      "name": "GET /pets/:id",
+      "duration_ms": 2000.4
+    }
+  ],
+  "logs": [
+    {
+      "delay_ms": 2000,
+      "level": "warn",
+      "message": "pet_lookup_injected_delay",
+      "service": "pets-service",
+      "span_id": "afd84613bddf7152",
+      "timestamp": "2026-10-16T17:09:30.177392611Z",
+      "trace_id": "c6cf9eaa0c618faa99e4ed7197567e8c"
+    }
+  ]
+}

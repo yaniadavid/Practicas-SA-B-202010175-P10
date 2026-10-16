@@ -1,0 +1,76 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: p10-appointments-slos
+  namespace: observability
+spec:
+  groups:
+    - name: p10-appointments-sli
+      interval: 30s
+      rules:
+        - record: p10:availability:eligible:increase5m
+          expr: sum(increase(sa_http_requests_total{job="api-gateway",route="/api/appointments",method="POST",status_class=~"2xx|3xx|5xx"}[5m])) or vector(0)
+        - record: p10:availability:bad:increase5m
+          expr: sum(increase(sa_http_requests_total{job="api-gateway",route="/api/appointments",method="POST",status_class="5xx"}[5m])) or vector(0)
+        - record: p10:availability:eligible:increase1h
+          expr: sum(increase(sa_http_requests_total{job="api-gateway",route="/api/appointments",method="POST",status_class=~"2xx|3xx|5xx"}[1h])) or vector(0)
+        - record: p10:availability:bad:increase1h
+          expr: sum(increase(sa_http_requests_total{job="api-gateway",route="/api/appointments",method="POST",status_class="5xx"}[1h])) or vector(0)
+        - record: p10:availability:eligible:increase7d
+          expr: sum(increase(sa_http_requests_total{job="api-gateway",route="/api/appointments",method="POST",status_class=~"2xx|3xx|5xx"}[7d])) or vector(0)
+        - record: p10:availability:bad:increase7d
+          expr: sum(increase(sa_http_requests_total{job="api-gateway",route="/api/appointments",method="POST",status_class="5xx"}[7d])) or vector(0)
+        - record: p10:latency:eligible:increase5m
+          expr: sum(increase(sa_http_request_duration_slo_seconds_bucket{job="api-gateway",route="/api/appointments",method="POST",status_class="2xx",le="+Inf"}[5m])) or vector(0)
+        - record: p10:latency:good:increase5m
+          expr: sum(increase(sa_http_request_duration_slo_seconds_bucket{job="api-gateway",route="/api/appointments",method="POST",status_class="2xx",le="1"}[5m])) or vector(0)
+        - record: p10:latency:eligible:increase1h
+          expr: sum(increase(sa_http_request_duration_slo_seconds_bucket{job="api-gateway",route="/api/appointments",method="POST",status_class="2xx",le="+Inf"}[1h])) or vector(0)
+        - record: p10:latency:good:increase1h
+          expr: sum(increase(sa_http_request_duration_slo_seconds_bucket{job="api-gateway",route="/api/appointments",method="POST",status_class="2xx",le="1"}[1h])) or vector(0)
+        - record: p10:latency:eligible:increase7d
+          expr: sum(increase(sa_http_request_duration_slo_seconds_bucket{job="api-gateway",route="/api/appointments",method="POST",status_class="2xx",le="+Inf"}[7d])) or vector(0)
+        - record: p10:latency:good:increase7d
+          expr: sum(increase(sa_http_request_duration_slo_seconds_bucket{job="api-gateway",route="/api/appointments",method="POST",status_class="2xx",le="1"}[7d])) or vector(0)
+    - name: p10-appointments-budget
+      interval: 30s
+      rules:
+        - record: p10:availability:burn5m
+          expr: p10:availability:bad:increase5m / clamp_min(p10:availability:eligible:increase5m, 1) / 0.0001
+        - record: p10:availability:burn1h
+          expr: p10:availability:bad:increase1h / clamp_min(p10:availability:eligible:increase1h, 1) / 0.0001
+        - record: p10:availability:budget_used7d
+          expr: p10:availability:bad:increase7d / clamp_min(p10:availability:eligible:increase7d, 1) / 0.0001
+        - record: p10:availability:sli7d
+          expr: (1 - p10:availability:bad:increase7d / clamp_min(p10:availability:eligible:increase7d, 1)) and (p10:availability:eligible:increase7d > 0)
+        - record: p10:latency:burn5m
+          expr: clamp_min(p10:latency:eligible:increase5m - p10:latency:good:increase5m, 0) / clamp_min(p10:latency:eligible:increase5m, 1) / 0.0001
+        - record: p10:latency:burn1h
+          expr: clamp_min(p10:latency:eligible:increase1h - p10:latency:good:increase1h, 0) / clamp_min(p10:latency:eligible:increase1h, 1) / 0.0001
+        - record: p10:latency:budget_used7d
+          expr: clamp_min(p10:latency:eligible:increase7d - p10:latency:good:increase7d, 0) / clamp_min(p10:latency:eligible:increase7d, 1) / 0.0001
+        - record: p10:latency:sli7d
+          expr: (p10:latency:good:increase7d / clamp_min(p10:latency:eligible:increase7d, 1)) and (p10:latency:eligible:increase7d > 0)
+    - name: p10-appointments-alerts
+      interval: 30s
+      rules:
+        - alert: P10AvailabilityBudgetBurn
+          expr: (p10:availability:burn5m > 14.4) and (p10:availability:burn1h > 14.4) and (p10:availability:eligible:increase5m >= 10) and (p10:availability:eligible:increase1h >= 20)
+          for: 2m
+          labels:
+            severity: critical
+            slo: availability
+          annotations:
+            summary: "Presupuesto de disponibilidad P10 consumiéndose rápidamente"
+            description: "POST /api/appointments supera 14.4x del ritmo permitido por el SLO de 99.99% durante 5m y 1h."
+            runbook_url: https://github.com/yaniadavid/Practicas-SA-B-202010175-P8/blob/main/docs/runbooks/p10-availability.md
+        - alert: P10LatencyBudgetBurn
+          expr: (p10:latency:burn5m > 14.4) and (p10:latency:burn1h > 14.4) and (p10:latency:eligible:increase5m >= 10) and (p10:latency:eligible:increase1h >= 20)
+          for: 2m
+          labels:
+            severity: critical
+            slo: latency
+          annotations:
+            summary: "Presupuesto de latencia P10 consumiéndose rápidamente"
+            description: "Las citas POST exitosas que tardan más de 1s superan 14.4x del ritmo permitido por el SLO de 99.99% durante 5m y 1h."
+            runbook_url: https://github.com/yaniadavid/Practicas-SA-B-202010175-P8/blob/main/docs/runbooks/p10-latency.md

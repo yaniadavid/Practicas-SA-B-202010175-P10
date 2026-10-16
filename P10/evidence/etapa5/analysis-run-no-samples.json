@@ -1,0 +1,136 @@
+{
+    "apiVersion": "argoproj.io/v1alpha1",
+    "kind": "AnalysisRun",
+    "metadata": {
+        "annotations": {
+            "rollout.argoproj.io/revision": "3"
+        },
+        "creationTimestamp": "2026-10-16T17:07:03Z",
+        "generation": 2,
+        "labels": {
+            "app.kubernetes.io/component": "pets-service",
+            "rollout-type": "Step",
+            "rollouts-pod-template-hash": "85b57c8996",
+            "step-index": "2"
+        },
+        "name": "pets-service-85b57c8996-3-2",
+        "namespace": "sa-p8",
+        "ownerReferences": [
+            {
+                "apiVersion": "argoproj.io/v1alpha1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "Rollout",
+                "name": "pets-service",
+                "uid": "2bb335de-37c0-472c-bfb5-6e4a27f63ef6"
+            }
+        ],
+        "resourceVersion": "34616",
+        "uid": "70878972-d98d-40b1-bce4-9b1a0f9425e5"
+    },
+    "spec": {
+        "args": [
+            {
+                "name": "service-name",
+                "value": "pets-service"
+            },
+            {
+                "name": "route",
+                "value": "/pets/:id"
+            },
+            {
+                "name": "method",
+                "value": "GET"
+            },
+            {
+                "name": "canary-hash",
+                "value": "85b57c8996"
+            }
+        ],
+        "metrics": [
+            {
+                "count": 3,
+                "failureCondition": "result[0] \u003c 0 || result[0] \u003e 0.01",
+                "failureLimit": 0,
+                "interval": "15s",
+                "name": "canary-http-5xx-rate",
+                "provider": {
+                    "prometheus": {
+                        "address": "http://monitoring-prometheus.observability.svc.cluster.local:9090",
+                        "authentication": {
+                            "oauth2": {},
+                            "sigv4": {}
+                        },
+                        "query": "(\n  (\n    (sum(increase(sa_http_requests_total{job=\"{{args.service-name}}\",route=\"{{args.route}}\",method=\"{{args.method}}\",rollout_hash=\"{{args.canary-hash}}\",status_class=\"5xx\"}[2m])) or vector(0))\n    /\n    clamp_min(sum(increase(sa_http_requests_total{job=\"{{args.service-name}}\",route=\"{{args.route}}\",method=\"{{args.method}}\",rollout_hash=\"{{args.canary-hash}}\",status_class=~\"2xx|3xx|5xx\"}[2m])), 1)\n  )\n  and on() (sum(increase(sa_http_requests_total{job=\"{{args.service-name}}\",route=\"{{args.route}}\",method=\"{{args.method}}\",rollout_hash=\"{{args.canary-hash}}\",status_class=~\"2xx|3xx|5xx\"}[2m])) \u003e= 10)\n) or on() vector(-1)\n"
+                    }
+                },
+                "successCondition": "result[0] \u003e= 0 \u0026\u0026 result[0] \u003c= 0.01"
+            },
+            {
+                "count": 3,
+                "failureCondition": "result[0] \u003c 0 || result[0] \u003e 1",
+                "failureLimit": 0,
+                "interval": "15s",
+                "name": "canary-p95-latency-seconds",
+                "provider": {
+                    "prometheus": {
+                        "address": "http://monitoring-prometheus.observability.svc.cluster.local:9090",
+                        "authentication": {
+                            "oauth2": {},
+                            "sigv4": {}
+                        },
+                        "query": "(\n  histogram_quantile(0.95,\n    sum by (le) (rate(sa_http_request_duration_slo_seconds_bucket{job=\"{{args.service-name}}\",route=\"{{args.route}}\",method=\"{{args.method}}\",rollout_hash=\"{{args.canary-hash}}\",status_class=~\"2xx|3xx\"}[2m]))\n  )\n  and on() (sum(increase(sa_http_request_duration_slo_seconds_bucket{job=\"{{args.service-name}}\",route=\"{{args.route}}\",method=\"{{args.method}}\",rollout_hash=\"{{args.canary-hash}}\",status_class=~\"2xx|3xx\",le=\"+Inf\"}[2m])) \u003e= 10)\n) or on() vector(-1)\n"
+                    }
+                },
+                "successCondition": "result[0] \u003e= 0 \u0026\u0026 result[0] \u003c= 1"
+            }
+        ]
+    },
+    "status": {
+        "completedAt": "2026-10-16T17:07:03Z",
+        "dryRunSummary": {},
+        "message": "Metric \"canary-http-5xx-rate\" assessed Failed due to failed (1) \u003e failureLimit (0)",
+        "metricResults": [
+            {
+                "count": 1,
+                "failed": 1,
+                "measurements": [
+                    {
+                        "finishedAt": "2026-10-16T17:07:03Z",
+                        "phase": "Failed",
+                        "startedAt": "2026-10-16T17:07:03Z",
+                        "value": "[-1]"
+                    }
+                ],
+                "metadata": {
+                    "ResolvedPrometheusQuery": "(\n  (\n    (sum(increase(sa_http_requests_total{job=\"pets-service\",route=\"/pets/:id\",method=\"GET\",rollout_hash=\"85b57c8996\",status_class=\"5xx\"}[2m])) or vector(0))\n    /\n    clamp_min(sum(increase(sa_http_requests_total{job=\"pets-service\",route=\"/pets/:id\",method=\"GET\",rollout_hash=\"85b57c8996\",status_class=~\"2xx|3xx|5xx\"}[2m])), 1)\n  )\n  and on() (sum(increase(sa_http_requests_total{job=\"pets-service\",route=\"/pets/:id\",method=\"GET\",rollout_hash=\"85b57c8996\",status_class=~\"2xx|3xx|5xx\"}[2m])) \u003e= 10)\n) or on() vector(-1)\n"
+                },
+                "name": "canary-http-5xx-rate",
+                "phase": "Failed"
+            },
+            {
+                "count": 1,
+                "failed": 1,
+                "measurements": [
+                    {
+                        "finishedAt": "2026-10-16T17:07:03Z",
+                        "phase": "Failed",
+                        "startedAt": "2026-10-16T17:07:03Z",
+                        "value": "[-1]"
+                    }
+                ],
+                "metadata": {
+                    "ResolvedPrometheusQuery": "(\n  histogram_quantile(0.95,\n    sum by (le) (rate(sa_http_request_duration_slo_seconds_bucket{job=\"pets-service\",route=\"/pets/:id\",method=\"GET\",rollout_hash=\"85b57c8996\",status_class=~\"2xx|3xx\"}[2m]))\n  )\n  and on() (sum(increase(sa_http_request_duration_slo_seconds_bucket{job=\"pets-service\",route=\"/pets/:id\",method=\"GET\",rollout_hash=\"85b57c8996\",status_class=~\"2xx|3xx\",le=\"+Inf\"}[2m])) \u003e= 10)\n) or on() vector(-1)\n"
+                },
+                "name": "canary-p95-latency-seconds",
+                "phase": "Failed"
+            }
+        ],
+        "phase": "Failed",
+        "runSummary": {
+            "count": 2,
+            "failed": 2
+        },
+        "startedAt": "2026-10-16T17:07:03Z"
+    }
+}

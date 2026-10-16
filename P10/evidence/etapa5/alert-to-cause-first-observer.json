@@ -1,0 +1,10 @@
+{
+  "monitor_started_utc": "2026-10-16T17:03:27.827508Z",
+  "alert_name": "P10LatencyBudgetBurn",
+  "alert_first_seen_utc": "2026-10-16T17:12:13.837468Z",
+  "alert_starts_at_utc": "2026-10-16T17:12:11.475Z",
+  "receiver": [
+    "p10-slo-email"
+  ],
+  "result": "cause_not_confirmed"
+}

@@ -1,0 +1,97 @@
+{
+  "captured_utc": "2026-10-16T17:24:33.514678+00:00",
+  "source_repository": "yaniadavid/Practicas-SA-B-202010175 (privado)",
+  "workflow": "p10-observability.yml",
+  "runs": [
+    {
+      "tag": "v1.0.1",
+      "run_id": 38926473683,
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "828b147ba5152e4a3bbdbbc4db65251b68258d6f",
+      "created_at": "2026-10-16T15:45:12Z",
+      "jobs": [
+        {
+          "name": "validate",
+          "conclusion": "success"
+        },
+        {
+          "name": "build_scan_sign (appointments-service)",
+          "conclusion": "success"
+        },
+        {
+          "name": "build_scan_sign (api-gateway)",
+          "conclusion": "success"
+        },
+        {
+          "name": "build_scan_sign (pets-service)",
+          "conclusion": "success"
+        },
+        {
+          "name": "update_gitops",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "tag": "v1.0.2",
+      "run_id": 38931175819,
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "717a75316ba779863824f6ed898b66d6b2c17c42",
+      "created_at": "2026-10-16T16:20:30Z",
+      "jobs": [
+        {
+          "name": "validate",
+          "conclusion": "success"
+        },
+        {
+          "name": "build_scan_sign (pets-service)",
+          "conclusion": "success"
+        },
+        {
+          "name": "build_scan_sign (appointments-service)",
+          "conclusion": "success"
+        },
+        {
+          "name": "build_scan_sign (api-gateway)",
+          "conclusion": "success"
+        },
+        {
+          "name": "update_gitops",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "tag": "v1.0.3",
+      "run_id": 38935995337,
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4a0713b929cb11e952fbf85edc9c5a5bee66a305",
+      "created_at": "2026-10-16T16:57:44Z",
+      "jobs": [
+        {
+          "name": "validate",
+          "conclusion": "success"
+        },
+        {
+          "name": "build_scan_sign (appointments-service)",
+          "conclusion": "success"
+        },
+        {
+          "name": "build_scan_sign (api-gateway)",
+          "conclusion": "success"
+        },
+        {
+          "name": "build_scan_sign (pets-service)",
+          "conclusion": "success"
+        },
+        {
+          "name": "update_gitops",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}

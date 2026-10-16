@@ -1,0 +1,34 @@
+{
+  "captured_utc": "2026-10-16T17:12:20.320619+00:00",
+  "alerts": [
+    {
+      "annotations": {
+        "description": "Las citas POST exitosas que tardan m\u00e1s de 1s superan 14.4x del ritmo permitido por el SLO de 99.99% durante 5m y 1h.",
+        "runbook_url": "https://github.com/yaniadavid/Practicas-SA-B-202010175-P8/blob/main/docs/runbooks/p10-latency.md",
+        "summary": "Presupuesto de latencia P10 consumi\u00e9ndose r\u00e1pidamente"
+      },
+      "endsAt": "2026-10-16T17:16:11.475Z",
+      "fingerprint": "a1f8f01381ff8210",
+      "receivers": [
+        {
+          "name": "p10-slo-email"
+        }
+      ],
+      "startsAt": "2026-10-16T17:12:11.475Z",
+      "status": {
+        "inhibitedBy": [],
+        "mutedBy": [],
+        "silencedBy": [],
+        "state": "active"
+      },
+      "updatedAt": "2026-10-16T17:12:11.478Z",
+      "generatorURL": "http://monitoring-prometheus.observability:9090/graph?g0.expr=%28p10%3Alatency%3Aburn5m+%3E+14.4%29+and+%28p10%3Alatency%3Aburn1h+%3E+14.4%29+and+%28p10%3Alatency%3Aeligible%3Aincrease5m+%3E%3D+10%29+and+%28p10%3Alatency%3Aeligible%3Aincrease1h+%3E%3D+20%29&g0.tab=1",
+      "labels": {
+        "alertname": "P10LatencyBudgetBurn",
+        "prometheus": "observability/monitoring-prometheus",
+        "severity": "critical",
+        "slo": "latency"
+      }
+    }
+  ]
+}

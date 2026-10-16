@@ -1,0 +1,16 @@
+tempo:
+  retention: 24h
+  memBallastSizeMbs: 0
+  reportingEnabled: false
+  resources:
+    requests:
+      cpu: 75m
+      memory: 192Mi
+    limits:
+      cpu: 400m
+      memory: 512Mi
+
+persistence:
+  enabled: true
+  storageClassName: gp3
+  size: 2Gi

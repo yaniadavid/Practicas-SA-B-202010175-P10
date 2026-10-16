@@ -1,0 +1,6 @@
+node_modules/
+P10/.runtime/
+__pycache__/
+.env
+*.tfstate
+*.tfstate.*
