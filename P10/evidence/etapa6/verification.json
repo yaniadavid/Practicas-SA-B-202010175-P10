@@ -1,0 +1,39 @@
+{
+  "captured_utc": "2026-10-16T17:27:59.236053+00:00",
+  "public_repo": "https://github.com/yaniadavid/Practicas-SA-B-202010175-P10",
+  "public_file_checks": [
+    {
+      "name": "P10 README",
+      "status": 200,
+      "size": 5111
+    },
+    {
+      "name": "P10 etapa6",
+      "status": 200,
+      "size": 3480
+    },
+    {
+      "name": "P10 informe",
+      "status": 200,
+      "size": 79249
+    },
+    {
+      "name": "P10 evidencia",
+      "status": 200,
+      "size": 1438
+    },
+    {
+      "name": "GitOps AnalysisTemplate",
+      "status": 200,
+      "size": 2526
+    }
+  ],
+  "missing_relative_links": [],
+  "report_pdf_pages": 1,
+  "personal_email_hits": [],
+  "argocd": {
+    "sync": "Synced",
+    "health": "Healthy"
+  },
+  "video_url_status": "pendiente de publicación por la estudiante"
+}

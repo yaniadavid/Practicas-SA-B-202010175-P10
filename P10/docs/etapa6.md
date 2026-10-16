@@ -23,6 +23,8 @@ La evidencia `alert-to-cause.json` se corrigió durante esta etapa: un observado
 - Archivos de ejecución local, binarios y secretos omitidos de la copia pública; el correo personal se sustituyó por una descripción del destinatario confirmado.
 - Argo CD `sa-platform-p8` y el Rollout estable terminaron `Synced/Healthy`; la alerta quedó `inactive`, según la evidencia de la etapa 5.
 
+La [verificación estructurada](../evidence/etapa6/verification.json) conserva los accesos públicos comprobados, el recuento de páginas, la revisión de enlaces relativos y el estado final de Argo CD.
+
 ## Acción pendiente de la estudiante
 
 Grabar y publicar el video de 5 a 8 minutos siguiendo `docs/guion-video.md`; después sustituir en la tabla del README la fila **Video demostrativo** por su URL pública. El minutaje ya está preparado. El clúster AWS permanece activo para que pueda grabarse una demostración en vivo y genera cargos mientras siga encendido; no se apagó en esta etapa. GitHub y AWS no requieren cerrar el acceso para entregar P10. Cuando el video esté grabado, se puede decidir si se apaga la infraestructura.
