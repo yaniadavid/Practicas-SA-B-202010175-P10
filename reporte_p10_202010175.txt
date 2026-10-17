@@ -1,0 +1,74 @@
+================================================================
+ VERIFICACION PRACTICA 10 - v1.0
+ Carnet: 202010175        Fecha: 2026-10-17 11:02
+ Hash del script: 0f423f0112af7767
+================================================================
+
+--- 0. Herramientas y contexto (debe verificarlo el auxiliar)
+  [0;32m[OK][0m    Todas las herramientas presentes
+  Contexto de kubectl: arn:aws:eks:us-east-1:536882095007:cluster/sa-p9-202010175
+  [0;32m[OK][0m    Acceso al cluster confirmado
+
+--- 1. Repositorios
+  [0;32m[OK][0m    Repositorio de codigo accesible
+  [0;32m[OK][0m    Repositorio GitOps accesible
+  [0;32m[OK][0m    Carpeta /P10 presente
+  [0;32m[OK][0m    README de entrega presente
+
+--- 2. Conexion con Prometheus
+  [0;32m[OK][0m    Servicio de Prometheus encontrado: monitoring-prometheus
+  [0;32m[OK][0m    La API de Prometheus responde
+
+--- 2.1 Instrumentacion y correlacion (14 pts)
+  Servicios declarados: 3   con rastro de OpenTelemetry: 3
+  [0;32m[OK][0m    Tres o mas servicios instrumentados
+  [0;32m[OK][0m    Collector de OpenTelemetry desplegado
+  [0;32m[OK][0m    Se evidencia propagacion de contexto
+  [0;32m[OK][0m    Metrica de negocio presente en Prometheus: sa_appointments_created_total
+  >> 2.1 = 14 / 14
+
+--- 2.2 Canary gobernado por metricas (16 pts)
+  AnalysisTemplates en sa-p8: 2
+0
+  [0;31m[FALLA][0m El analisis NO consulta Prometheus (sigue con Job o no existe)
+  Consultas declaradas: 16
+    (
+      (
+        (sum(increase(sa_http_requests_total{job="{{args.service-name}}",route="{{args.route}}",method="{{args.met
+        /
+        clamp_min(sum(increase(sa_http_requests_total{job="{{args.service-name}}",route="{{args.route}}",method="{
+      )
+      and on() (sum(increase(sa_http_requests_total{job="{{args.service-name}}",route="{{args.route}}",method="{{a
+    ) or on() vector(-1)
+
+    (
+      histogram_quantile(0.95,
+        sum by (le) (rate(sa_http_request_duration_slo_seconds_bucket{job="{{args.service-name}}",route="{{args.ro
+      )
+      and on() (sum(increase(sa_http_request_duration_slo_seconds_bucket{job="{{args.service-name}}",route="{{args
+    ) or on() vector(-1)
+
+  [0;32m[OK][0m    Las consultas distinguen el trafico del canary
+  [0;32m[OK][0m    La promocion esta condicionada al analisis
+  [0;32m[OK][0m    Al menos una consulta devuelve datos reales
+  [0;32m[OK][0m    Evidencia de reversion por metricas: 2 AnalysisRun fallido(s)
+    run=pets-service-679cb87476-4-2 fase=Failed
+    run=pets-service-85b57c8996-3-2 fase=Failed
+  >> 2.2 = 11 / 16
+
+--- 2.3 SLO y alertas por presupuesto de error (12 pts)
+  Reglas de registro: 20
+0   reglas de alerta: 2
+0
+verificar_p10.sh: line 229: [: 20
+0: integer expression expected
+  [0;31m[FALLA][0m Sin reglas de registro (recording rules)
+  [0;32m[OK][0m    El indicador se calcula y devuelve datos: p10:availability:sli7d
+verificar_p10.sh: line 236: [: 2
+0: integer expression expected
+  [0;31m[FALLA][0m Sin reglas de alerta
+  [0;31m[FALLA][0m Alertas por umbral instantaneo, no por presupuesto de error
+  [0;31m[FALLA][0m Alertas sin anotacion de runbook
+  >> 2.3 = 2 / 12
+
+--- 2.4 Recorrido del sintoma a la causa (10 pts)
